@@ -2,11 +2,16 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 
 // Starting shield power level
 int shield_power = 50;  
 
 int main() {
+    // List of Starwars Characters
+    const char *character[4] = {"Luke", "Han", "Chewbacca", "Leia"};
+    // Array of adjustment values corresponding to character
+    int adjustment[4] = {25, 20, 30, 15};
     pid_t pid;
 
     printf("Millennium Falcon: Initial shield power level: %d%%\n\n", shield_power);
@@ -18,12 +23,31 @@ int main() {
             // Chewbacca increases the shield power by 30
             // Leia increases the shield power by 15
                
+    // Loop to create 4 child processes
+    for (int x = 0; x < 4; x++) {
+        // Create child process
+        pid = fork();
 
-    // Check if process creation failed
-        // -----> Write you code here 
+        // Check that child process creation worked
+        if (pid < 0) {
+            printf("Child process %d failed to create", x);
+            return 1;
+        }
+        // Successful child creation code
+        // Calculate and print each character's shield power
+        else if(pid == 0) {
+            int power = shield_power + adjustment[x];
+            printf("%s: Adjusting shields...\n", character[x]);
+            printf("%s: Shield power level now at %d%%\n", character[x], power);
+            exit(0);
+        }
+        // Parent process
+        else{
+            // Have process wait for the children processes to finish
+            wait(NULL);
+        }
 
-    // Make parent process wait for all child processes to complete
-        // -----> Write you code here 
+    }
 
 
     // Parent process reports final state
