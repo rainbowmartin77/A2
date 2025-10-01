@@ -47,9 +47,7 @@ int main() {
     }
 
     // Make parent process wait for the child processes
-    for (int m = 0; m < 4; m++) {
-        wait(NULL);
-    }
+    while (wait(NULL) > 0);
 
     // Parent process reports final state
     printf("\nFinal shield power level on the Millennium Falcon: %d%%\n", shield_power);
