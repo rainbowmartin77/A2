@@ -33,22 +33,23 @@ int main() {
             printf("Child process %d failed to create", x);
             return 1;
         }
+
         // Successful child creation code
-        // Calculate and print each character's shield power
         else if(pid == 0) {
+            // Calculate and print each character's shield power
             int power = shield_power + adjustment[x];
             printf("%s: Adjusting shields...\n", character[x]);
             printf("%s: Shield power level now at %d%%\n", character[x], power);
+            // Exit the child process, do not continue to loop and create additional child processes
             exit(0);
-        }
-        // Parent process
-        else{
-            // Have process wait for the children processes to finish
-            wait(NULL);
         }
 
     }
 
+    // Make parent process wait for the child processes
+    for (int m = 0; m < 4; m++) {
+        wait(NULL);
+    }
 
     // Parent process reports final state
     printf("\nFinal shield power level on the Millennium Falcon: %d%%\n", shield_power);
