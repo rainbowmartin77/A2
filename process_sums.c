@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define NUM_PROCESSES 4 
+#define NUM_PROCESSES 4
 
 int main(int argc, char *argv[]) 
 {
