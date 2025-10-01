@@ -35,12 +35,16 @@ int main(int argc, char *argv[])
 
 
     // Arrays used to hold the divided values
-    int dividedArray[NUM_PROCESSES][divide];
+    long long **dividedArray = malloc(NUM_PROCESSES * sizeof(long long *));
+    for (int v = 0; v < NUM_PROCESSES; v++) {
+        dividedArray[v] = malloc(divide * sizeof(long long));
+    }
 
     //Loop to break up array of values into smaller arrays
     for (int i = 0; i < NUM_PROCESSES; i++) {
         for(int j = 0; j < divide; j++) {
-            dividedArray[i][j] = arr[i * divide + j];
+            int index = i * divide + j;
+            dividedArray[i][j] = (index < N) ? arr[index] : 0;
         }
     }
 
@@ -56,7 +60,7 @@ int main(int argc, char *argv[])
 
         // Create child process
         pid_t pid = fork();
-        int thisSum = 0;
+        long long thisSum = 0;
 
         if (pid < 0) {
             printf("Child process %d failed to create", x);
@@ -85,13 +89,18 @@ int main(int argc, char *argv[])
     while(wait(NULL) > 0);
 
     for (int q = 0; q < NUM_PROCESSES; q++) {
-        int currentSum;
+        long long currentSum;
         read(pipefd[q][0], &currentSum, sizeof(currentSum));
         close(pipefd[q][0]);
         total += currentSum;
     }
 
     printf("Total sum = %lld\n", total);
+
+    for (int v = 0; v < NUM_PROCESSES; v++) {
+        free(dividedArray[v]);
+    }
+    free(dividedArray);
     
     return 0;
 }
