@@ -28,21 +28,26 @@ int main(int argc, char *argv[])
     // complete this
     // Global variable to track total
     long long total = 0;
-    int divide = N/10;
-    // 10 arrays used to hold the divided values
-    int dividedArray[10][divide];
+    int divide;
 
-    //Loop to break up array of values into 10 arrays
-    for (int i = 0; i < 10; i++) {
+    //Check for even division of arr
+    divide = (N + NUM_PROCESSES - 1) / NUM_PROCESSES;
+
+
+    // Arrays used to hold the divided values
+    int dividedArray[NUM_PROCESSES][divide];
+
+    //Loop to break up array of values into smaller arrays
+    for (int i = 0; i < NUM_PROCESSES; i++) {
         for(int j = 0; j < divide; j++) {
-            dividedArray[i][j] = arr[i * 10 + j];
+            dividedArray[i][j] = arr[i * divide + j];
         }
     }
 
     // Create one pipe for each child process
-    int pipefd[10][2];
+    int pipefd[NUM_PROCESSES][2];
 
-    for (int x = 0; x < 10; x++) {
+    for (int x = 0; x < NUM_PROCESSES; x++) {
         
         if (pipe(pipefd[x]) == -1) {
             perror("pipe");
@@ -79,7 +84,7 @@ int main(int argc, char *argv[])
 
     while(wait(NULL) > 0);
 
-    for (int q = 0; q < 10; q++) {
+    for (int q = 0; q < NUM_PROCESSES; q++) {
         int currentSum;
         read(pipefd[q][0], &currentSum, sizeof(currentSum));
         close(pipefd[q][0]);
