@@ -37,9 +37,9 @@ int main() {
         // Successful child creation code
         else if(pid == 0) {
             // Calculate and print each character's shield power
-            int power = shield_power + adjustment[x];
+            shield_power += adjustment[x];
             printf("%s: Adjusting shields...\n", character[x]);
-            printf("%s: Shield power level now at %d%%\n", character[x], power);
+            printf("%s: Shield power level now at %d%%\n", character[x], shield_power);
             // Exit the child process, do not continue to loop and create additional child processes
             exit(0);
         }
